@@ -10,8 +10,8 @@
 
 - name: First-time install admin password
   set_fact:
-          #    current_nexus_admin_password: 'admin123'
-    current_nexus_admin_password: 'changeme'
+     current_nexus_admin_password: 'admin123'
+#    current_nexus_admin_password: 'changeme'
 
 - name: wait nexus ready
   uri:
