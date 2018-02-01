@@ -1,6 +1,7 @@
 ---
 nexus_version: '3.3.1-01'
 nexus_package: "nexus-{{ nexus_version }}-unix.tar.gz"
+nexus_default_host: nexus
 nexus_download_dir: '/tmp'
 nexus_backup_dir: '/var/nexus-backup'
 nexus_os_group: 'nexus'
@@ -23,10 +24,10 @@ nexus_backup_log: '/var/log/nexus-backup.log'
 
 # Nexus default properties
 nexus_default_port: 8081
-nexus_docker_hosted_port: 9080
+nexus_docker_hosted_port: 19081
 nexus_docker_proxy_port: 9081
 nexus_docker_group_port: 9082
-nexus_default_context_path: '/'
+nexus_default_context_path: '/nexus/'
 
 nexus_admin_password: 'changeme' # Note : admin password change subsequent to first-time install is *not implemented* yet
 nexus_anonymous_access: false
@@ -79,7 +80,7 @@ nexus_proxy_exclude_hosts:
   - "[::1]"
 
 nexus_config_pypi: false
-nexus_config_docker: false
+nexus_config_docker: true
 nexus_config_raw: false
 nexus_config_rubygems: false
 nexus_config_bower: false

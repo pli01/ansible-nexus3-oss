@@ -1,12 +1,32 @@
 ---
-- include: nexus_purge.yml
-  when: ((purge is defined) and (purge | bool))
+#- include: nexus_purge.yml
+#  when: ((purge is defined) and (purge | bool))
 
-- include: nexus_install.yml
+#- include: nexus_install.yml
+#  when: ((install is defined) and (install | bool))
 
-- include: httpd_reverse_proxy_config.yml
-  when: httpd_setup_enable
+#- include: httpd_reverse_proxy_config.yml
+#  when: httpd_setup_enable
 
+- name: First-time install admin password
+  set_fact:
+          #    current_nexus_admin_password: 'admin123'
+    current_nexus_admin_password: 'changeme'
+
+- name: wait nexus ready
+  uri:
+    url: "http://{{ nexus_default_host }}:{{ nexus_default_port }}{{ nexus_default_context_path }}service/siesta/rest/v1/script"
+    user: 'admin'
+    password: "{{ current_nexus_admin_password }}"
+    method: GET
+    force_basic_auth: yes
+    status_code: 200
+  register: nexus_up
+  until: nexus_up.status == 200
+  retries: 120
+  delay: 1
+
+- include: nexus_declare.yml
 - include: admin_password_setup.yml
 
 - name: Deleting default repositories
@@ -19,7 +39,7 @@
     - nuget-group
     - nuget-hosted
     - nuget.org-proxy
-  when: nexus_data_dir_contents.stdout == "" and nexus_delete_default_repos
+  when: nexus_delete_default_repos
 
 - name: Deleting default blobstore
   include: delete_blobstore_each.yml
@@ -33,7 +53,7 @@
     - name: "{{ nexus_blob_names.npm.blob }}"
     - name: "{{ nexus_blob_names.mvn.blob }}"
     - name: "{{ nexus_blob_names.gitlfs.blob }}"
-  when: nexus_data_dir_contents.stdout == "" and nexus_delete_default_blobstore
+  when: nexus_delete_default_blobstore
 
 - include: setup_ldap_each.yml
   with_items: "{{ ldap_connections }}"
