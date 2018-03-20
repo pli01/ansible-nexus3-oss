@@ -198,5 +198,11 @@
         footerEnabled: "{{ nexus_branding_footer != '' }}"
         headerEnabled: "{{ nexus_branding_header != '' }}"
 
+# TODO: - name: Configure outreach management capability
+#  vars:
+#    script_name: setup_capability
+#    args:
+#      capability_typeId: "OutreachManagementCapability"
+
 - include: create_task_each.yml
   with_items: "{{ nexus_scheduled_tasks }}"
